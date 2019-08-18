@@ -1,14 +1,7 @@
 package com.example.kaiwaredaikon.nfcreader
 
-import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.Intent
-import android.content.IntentFilter
-import android.nfc.NfcAdapter
-import android.nfc.tech.NfcF
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.example.mylibrary.TestNfcReader
@@ -16,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.concurrent.schedule
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TestNfcReader.NfcManagerCallback {
 
     private val handler = Handler()
     private var testNfcReader = TestNfcReader()
@@ -27,28 +20,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setTextView(STATUS_WAIT)
-        testNfcReader.initNfcAdapter( this )
+        testNfcReader.initNfcAdapter(this)
+        testNfcReader.setCallbacks(this)
     }
 
     override fun onResume() {
         super.onResume()
-        testNfcReader.startDetection( this, this )
+        testNfcReader.startDetection(this)
     }
 
     override fun onPause() {
         super.onPause()
-        testNfcReader.endDetection( this )
+        testNfcReader.endDetection(this)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
+    override fun success(uid: String?) {
+        Log.d("TestNfcReader", "uid$uid")
 
-        if (status == STATUS_WAIT) {
-
-            testNfcReader.getUid(intent)
-
+        handler.post {
             setTextView(STATUS_SUCCESS)
-
             Timer().schedule(3000, 3000, {
                 handler.post {
                     setTextView(STATUS_WAIT)
@@ -58,11 +48,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun error() {
+    }
+
     private fun setTextView(sts: Int) {
 
         status = sts
 
-        Log.d("MainActivity", "sts$sts")
+        Log.d("TestNfcReader", "sts$sts")
 
         when (sts) {
             STATUS_WAIT -> textView.text = "カードをかざしてください。"

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), TestNfcReader.NfcManagerCallback {
         testNfcReader.endDetection(this)
     }
 
-    override fun success(uid: String?) {
+    override fun success(uid: String) {
         Log.d("TestNfcReader", "uid$uid")
 
         handler.post {

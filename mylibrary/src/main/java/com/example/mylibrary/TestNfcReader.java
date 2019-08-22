@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 public final class TestNfcReader {
 
+    // 基本的にKotlinとの整合性為に、変数、メソッド、メソッド引数にはNonNull or Nullableをつけて開発を行う。
+
+    @Nullable
     private NfcAdapter nfcAdapter;
 
     public interface NfcManagerCallback {
-        void success(String uid);
+        void success( @NonNull String uid);
         void error();
     }
 
@@ -48,7 +53,7 @@ public final class TestNfcReader {
     }
 
     private String bytesToString(byte[] bytes) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (byte bt : bytes) {
             int i = 0xFF & (int) bt;
             String str = Integer.toHexString(i);

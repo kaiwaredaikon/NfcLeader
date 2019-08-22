@@ -11,7 +11,8 @@ import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity(), TestNfcReader.NfcManagerCallback {
 
-    private val handler = Handler()
+    //　lateinit：変数宣言に初期値を代入せず、後から代入されることを約束する
+    private lateinit var handler: Handler
     private var testNfcReader = TestNfcReader()
     private var status = 0
 
@@ -19,7 +20,9 @@ class MainActivity : AppCompatActivity(), TestNfcReader.NfcManagerCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setTextView(STATUS_WAIT)
+        handler = Handler()
+
+        setTextView(STATUS_SUCCESS)
         testNfcReader.initNfcAdapter(this)
         testNfcReader.setCallbacks(this)
     }
@@ -59,7 +62,8 @@ class MainActivity : AppCompatActivity(), TestNfcReader.NfcManagerCallback {
 
         when (sts) {
             STATUS_WAIT -> textView.text = "カードをかざしてください。"
-            STATUS_SUCCESS -> textView.text = "カードを読み込みました"
+//            STATUS_SUCCESS -> textView.text = "カードをかざしてください。"
+          STATUS_SUCCESS -> textView.text = getString( R.string.app_load, "kaiware", 123 )
             STATUS_INVALID -> textView.text = "無効になっています。"
         }
     }

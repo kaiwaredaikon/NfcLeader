@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Library</string>
+    <string name="app_load">%1$sを%2$d枚読み込みました</string>
 </resources>
